@@ -10,7 +10,6 @@
         "assignmentId": "78553"
     },
     "dependencies": {
-        "quiz-express": "file:quiz_express",
-        "supertest": "4.0.2"
+        "quiz-express": "file:quiz_express"
     }
 }

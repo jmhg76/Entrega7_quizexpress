@@ -2,10 +2,10 @@
 /* eslint-disable no-undef*/
 // IMPORTS
 const path = require("path");
-const request = require("supertest");
 const Utils = require("./testutils");
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const exec = util.promisify(require("child_process").exec);
+const spawn = require("child_process").spawn;
 const logger = require("morgan");
 const fs = require("fs");
 const ejs = require("ejs");
@@ -131,7 +131,7 @@ describe("Comprobación de ficheros", function () {
 
 
 describe("Pruebas funcionales", function () {
-	var app;
+	var server;
 	const db_file = path.join(path_assignment, '..', 'quiz.sqlite');
 	before(async function() {
 		// Crear base de datos nueva y poblarla antes de los tests funcionales. por defecto, el servidor coge quiz.sqlite del CWD
@@ -141,28 +141,21 @@ describe("Pruebas funcionales", function () {
 		await exec(`${sequelize_cmd} db:migrate --url "sqlite://${db_file}" --migrations-path ${path.join(path_assignment, "migrations")}`)
 		await exec(`${sequelize_cmd} db:seed:all --url "sqlite://${db_file}" --seeders-path ${path.join(path_assignment, "seeders")}`)
 
-		try {
-			app = require(path.resolve(path.join(path_assignment, 'app')));
-			//fs.copyFileSync(path.join(path_assignment, 'quiz.sqlite'), 'quiz.sqlite')
-		} catch (e) {
-			console.log("No se pudo cargar el módulo");
-		}
+
+		server = spawn(path.join(path_assignment, "bin", "www"), []);
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		browser.site = "http://localhost:3000/"
 	});
 
 	after(async function() {
 		// Borrar base de datos
+		server.kill();
 		fs.unlinkSync(db_file);
 	})
-	pre = function() {
-		// Test whether the module could be imported.
-		
-		(app).should.not.be.undefined;
-	}
 	it("7: Comprobar que se puede importar el módulo...", async function () {
 		this.score = 0;
 		this.msg_ok = 'El módulo parece correcto';
 		this.msg_err = 'No puede importarse el módulo de la aplicación';
-		pre();
 	})
 	var endpoints = [
 		["/", 200],
@@ -179,11 +172,12 @@ describe("Pruebas funcionales", function () {
 			this.name = "";
 			this.msg_ok = 'Respuesta correcta';
 			this.msg_err = 'No hubo respuesta';
-			pre();
-
-			return request(app)
-				.get(endpoint)
-				.expect(code);
+			check = function(){
+				browser.assert.status(code);
+			}
+			return browser.visit(endpoint)
+			.then(check)
+			.catch(check);
 		})
 	}
 	it(`13: Comprobar que se muestran los quizzes`, async function () {
@@ -191,7 +185,6 @@ describe("Pruebas funcionales", function () {
 		this.name = "";
 		this.msg_ok = 'Quizzes encontrados';
 		this.msg_err = 'No se encuentran todos los quizzes';
-		pre();
 		let questions = [
 			{question: "Capital de Italia", answer: "Roma"},
 			{question: "Capital de Francia" , answer: "París"},
@@ -199,13 +192,15 @@ describe("Pruebas funcionales", function () {
 			{question: "Capital de Portugal", answer: "Lisboa"},
 		]
 
-		res = await request(app)
-			.get("/quizzes")
-			.expect(200)
+		await browser.visit("/quizzes");
+		browser.assert.status(200)
+
+		res = browser.html();
+
 		for (idx in questions) {
 			let expect = `${questions[idx].question}: ${questions[idx].answer}`
 			this.msg_err = `No se encuentra "${expect}" en los quizzes`;
-			res.text.includes(expect).should.be.equal(true);
+			res.includes(expect).should.be.equal(true);
 		}
 	})
 
@@ -214,15 +209,13 @@ describe("Pruebas funcionales", function () {
 		this.name = "";
 		this.msg_ok = 'Foto incorporada';
 		this.msg_err = 'No se encuentra la foto';
-		pre();
 
-		return request(app)
-			.get("/credits")
-			.expect(200)
-			.expect(function (res) {
-				res.text.includes("img src=").should.be.equal(true);
-				res.text.includes("images/").should.be.equal(true);
-			})
+		await browser.visit("/credits");
+		browser.assert.status(200);
+		allcontent = browser.html();
+		content = browser.html("img");
+		content.includes("img src=").should.be.equal(true);
+		content.includes("images/").should.be.equal(true);
 	})
 });
 
