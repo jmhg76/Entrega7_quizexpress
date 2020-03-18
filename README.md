@@ -283,8 +283,6 @@ Ahora el servidor debe responder a la petición **http://localhost:3000/quizzes*
 
 Para ayudar al desarrollo, se provee una herramienta de autocorrección que prueba las distintas funcionalidades que se piden en el enunciado. Para utilizar esta herramienta debes tener node.js (y npm) (https://nodejs.org/es/) y Git instalados.
 
-**Atención**: Las pruebas que realiza el autocorector presuponen que el fichero de base de datos **quiz.sqlite** existe y que contiene las cuatro preguntas sobre capitales descritas al principio de este enunciado. Para ello, asegúrese de haber ejecutado **"npx run migrate"** y **"npm run seed"** antes de ejecutar el autocorector. Si lo necesita, puede borrar el fichero de base de datos y regenerarlo con los dos comandos anteriores.
-
 Para instalar y hacer uso de la herramienta de autocorrección en el ordenador local, ejecuta los siguientes comandos en el directorio raíz del proyecto, es decir, en el directorio padre del directorio **quiz_express**:
 
 ```
@@ -327,7 +325,11 @@ En el enlace **https://www.npmjs.com/package/autocorector** se proveen instrucci
 
 **RÚBRICA**: Se puntuará el ejercicio a corregir sumando el % indicado a la nota total si la parte indicada es correcta:
 
-- **30%:** Petición /credits
-- **70%:** Petición /quizzes
+- **10%:** Integracion de express-partials
+- **10%:** Scripts de package.json
+- **10%:** Petición /
+- **10%:** Eliminar petición /users
+- **20%:** Petición /credits
+- **40%:** Petición /quizzes
 
 Si pasa todos los tests se dará la máxima puntuación.
