@@ -4,6 +4,8 @@
 const path = require("path");
 const request = require("supertest");
 const Utils = require("./testutils");
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const logger = require("morgan");
 const fs = require("fs");
 const ejs = require("ejs");
@@ -133,11 +135,19 @@ describe("Pruebas funcionales", function () {
 	before(async function() {
 		try {
 			app = require(path.resolve(path.join(path_assignment, 'app')));
-			fs.copyFileSync(path.join(path_assignment, 'quiz.sqlite'), 'quiz.sqlite')
+			//fs.copyFileSync(path.join(path_assignment, 'quiz.sqlite'), 'quiz.sqlite')
 		} catch (e) {
 			console.log("No se pudo cargar el módulo");
 		}
+		await exec(`touch ${path_assignment}/../quiz.sqlite`)
+		await exec(`./quiz_express/node_modules/.bin/sequelize  db:migrate --url "sqlite://${path_assignment}/../quiz.sqlite" --migrations-path quiz_express/migrations`)
+
+		await exec(`./quiz_express/node_modules/.bin/sequelize  db:seed:all --url "sqlite://${path_assignment}/../quiz.sqlite" --seeders-path quiz_express/seeders`)
 	});
+
+	after(async function() {
+		fs.unlinkSync('quiz.sqlite');
+	})
 	pre = function() {
 		// Test whether the module could be imported.
 		// Add this function after defining the score, but before any actual test code.
@@ -151,7 +161,6 @@ describe("Pruebas funcionales", function () {
 	})
 	var endpoints = [
 		["/", 200],
-		["/index", 200],
 		["/quizzes", 200],
 		["/credits", 200],
 		["/users", 404],
@@ -173,7 +182,7 @@ describe("Pruebas funcionales", function () {
 		})
 	}
 	it(`13: Comprobar que se muestran los quizzes`, async function () {
-		this.score = 2;
+		this.score = 3;
 		this.name = "";
 		this.msg_ok = 'Quizzes encontrados';
 		this.msg_err = 'No se encuentran todos los quizzes';

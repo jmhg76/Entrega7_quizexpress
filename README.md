@@ -6,7 +6,7 @@
 
 # Entrega 7: Quiz Express 
 
-Versión: 14 de Marzo de 2020
+Versión: 18 de Marzo de 2020
 
 ## Objetivos
 * Afianzar los conocimientos obtenidos sobre el uso de Express para desarrollar servidores web.
@@ -18,8 +18,7 @@ Versión: 14 de Marzo de 2020
 En esta práctica se desarrollará un servidor web con el siguiente interfaz REST: 
 
 ```
-GET /         // igual a: GET /index.
-GET /index    // muestra la página home de bienvenida.
+GET /         // muestra la página home de bienvenida.
 GET /credits  // muestra la página de créditos con el nombre, la foto y cv del autor.
 GET /quizzes  // muestra un listado con todos los quizzes almacenados en la BBDD. 
 ```
@@ -284,10 +283,12 @@ Ahora el servidor debe responder a la petición **http://localhost:3000/quizzes*
 
 Para ayudar al desarrollo, se provee una herramienta de autocorrección que prueba las distintas funcionalidades que se piden en el enunciado. Para utilizar esta herramienta debes tener node.js (y npm) (https://nodejs.org/es/) y Git instalados.
 
+**Atención**: Las pruebas que realiza el autocorector presuponen que el fichero de base de datos **quiz.sqlite** existe y que contiene las cuatro preguntas sobre capitales descritas al principio de este enunciado. Para ello, asegúrese de haber ejecutado **"npx run migrate"** y **"npm run seed"** antes de ejecutar el autocorector. Si lo necesita, puede borrar el fichero de base de datos y regenerarlo con los dos comandos anteriores.
+
 Para instalar y hacer uso de la herramienta de autocorrección en el ordenador local, ejecuta los siguientes comandos en el directorio raíz del proyecto, es decir, en el directorio padre del directorio **quiz_express**:
 
 ```
-$ npm install -g autocorector    ## Instala el programa de test
+$ sudo npm install -g autocorector    ## Instala el programa de test
 $ autocorector                   ## Pasa los tests al fichero a entregar
 ............................     ## en el directorio de trabajo
 ... (resultado de los tests)
@@ -304,6 +305,8 @@ $ npx autocorector             ## Pasa los tests al fichero a entregar
 ```
 
 Se puede pasar la herramienta de autocorrección tantas veces como se desee sin ninguna repercusión en la calificación.
+
+
 
 ## Instrucciones para la Entrega y Evaluación.
 
