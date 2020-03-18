@@ -132,25 +132,30 @@ describe("Comprobación de ficheros", function () {
 
 describe("Pruebas funcionales", function () {
 	var app;
+	const db_file = path.join(path_assignment, '..', 'quiz.sqlite');
 	before(async function() {
+		// Crear base de datos nueva y poblarla antes de los tests funcionales. por defecto, el servidor coge quiz.sqlite del CWD
+		fs.closeSync(fs.openSync(db_file, 'w'));
+
+		let sequelize_cmd = path.join(path_assignment, "node_modules", ".bin", "sequelize")
+		await exec(`${sequelize_cmd} db:migrate --url "sqlite://${db_file}" --migrations-path ${path.join(path_assignment, "migrations")}`)
+		await exec(`${sequelize_cmd} db:seed:all --url "sqlite://${db_file}" --seeders-path ${path.join(path_assignment, "seeders")}`)
+
 		try {
 			app = require(path.resolve(path.join(path_assignment, 'app')));
 			//fs.copyFileSync(path.join(path_assignment, 'quiz.sqlite'), 'quiz.sqlite')
 		} catch (e) {
 			console.log("No se pudo cargar el módulo");
 		}
-		await exec(`touch ${path_assignment}/../quiz.sqlite`)
-		await exec(`./quiz_express/node_modules/.bin/sequelize  db:migrate --url "sqlite://${path_assignment}/../quiz.sqlite" --migrations-path quiz_express/migrations`)
-
-		await exec(`./quiz_express/node_modules/.bin/sequelize  db:seed:all --url "sqlite://${path_assignment}/../quiz.sqlite" --seeders-path quiz_express/seeders`)
 	});
 
 	after(async function() {
-		fs.unlinkSync('quiz.sqlite');
+		// Borrar base de datos
+		fs.unlinkSync(db_file);
 	})
 	pre = function() {
 		// Test whether the module could be imported.
-		// Add this function after defining the score, but before any actual test code.
+		
 		(app).should.not.be.undefined;
 	}
 	it("7: Comprobar que se puede importar el módulo...", async function () {
