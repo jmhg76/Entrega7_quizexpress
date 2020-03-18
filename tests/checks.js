@@ -6,10 +6,7 @@ const Utils = require("./testutils");
 const util = require('util');
 const exec = util.promisify(require("child_process").exec);
 const spawn = require("child_process").spawn;
-const logger = require("morgan");
 const fs = require("fs");
-const ejs = require("ejs");
-const glob = require("glob");
 
 const path_assignment = path.resolve(path.join(__dirname, "../", "quiz_express"));
 
