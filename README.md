@@ -6,7 +6,7 @@
 
 # Entrega 7: Quiz Express 
 
-Versión: 18 de Marzo de 2020
+Versión: 19 de Marzo de 2020
 
 ## Objetivos
 * Afianzar los conocimientos obtenidos sobre el uso de Express para desarrollar servidores web.
@@ -23,7 +23,7 @@ GET /credits  // muestra la página de créditos con el nombre, la foto y cv del
 GET /quizzes  // muestra un listado con todos los quizzes almacenados en la BBDD. 
 ```
 
-El esqueleto inicial del servidor web se generará con el paquete **express-generator**. Este esqueleto se adaptará para que atienda  las primitivas anteriores. Se seguirá el patrón MVC, creando los modelos, controladores, rutas y vistas necesarios.
+El esqueleto inicial del servidor web se generará con el paquete **express-generator**. Este esqueleto se adaptará para atender las primitivas anteriores. Se seguirá el patrón MVC, creando los modelos, controladores, rutas y vistas necesarios.
 
 Para el modelo se creará una base de datos **SQLite** a la que se accederá usando el ORM **Sequelize**. La base de datos tendrá una tabla llamada **Quizzes** que se inicializará con los siguientes quizzes: 
 
@@ -58,7 +58,7 @@ $ npm install
 
 El proyecto clonado solo contiene los ficheros necesarios para ejecutar el autocorrector. El alumno debe crear un subdirectorio nuevo en el que desarrollará la practica. Debe usar el paquete **express-generator** para crear ese subdirectorio de trabajo con el esqueleto inicial de la práctica.
 
-Primero hay que instalar el paquete **express-generator**. Para ello el alumno debe ejecutar:
+Primero hay que instalar el paquete **express-generator**. Para ello, el alumno debe ejecutar:
 
 ```
 $ npm install express-generator
@@ -93,7 +93,7 @@ El servidor lanzado atiende las peticiones en el puerto **3000**. Hay que ejecut
 
 ### Tarea 2 - Limpiar el esqueleto
 
-El esqueleto generado por **express** tiene algunos elementos que no queremos usar, por lo que vamos a hacer limpieza. Concretando, vamos a eliminar el recurso **user** creado por el esqueleto. Este recurso podría ser el paso inicial para completar un recurso de gestión de usuarios.
+El esqueleto generado por **express** tiene algunos elementos que no queremos usar, por lo que vamos a hacer limpieza. Concretamente vamos a eliminar el recurso **user** creado por el esqueleto. Este recurso podría ser el paso inicial para completar un servicio de gestión de usuarios.
 
 * Eliminar las rutas de user: El esqueleto creó el fichero **routes/users.js** con las definiciones de las rutas de usuarios. El alumno de borrar este fichero.
 * El fichero **routes/users.js** se carga y usa en **app.js**. El alumno debe buscar y eliminar las referencias a **routes/users.js**. Son las siguientes sentencias de app.js:
@@ -107,7 +107,7 @@ app.use('/users', usersRouter);
 
 Cada vez que se modifica algún fichero (javascript) de nuestro proyecto, hay que detener el servidor y relanzarlo para los nuevos cambios se apliquen. Para no tener que hacer este proceso manualmente, pueden instalarse programas que lo hacen automáticamente por nosotros (**forever**, **supervisor**, ...). Estos programa vigilan los ficheros de nuestra aplicación, y si detectan que hay cambios, detienen la aplicación y la relanzan de nuevo.
 
-El alumno debe usar **supervisor**. Para instalarlo debe ejecutar:
+El alumno debe usar **supervisor**. Para instalarlo debe ejecutar el siguiente comando en el terminal estando en el directorio `quiz_express`
 
 ```
 $ npm install supervisor
@@ -117,7 +117,7 @@ $ npm install supervisor
 
 Para usar **supervisor**, el servidor se debe lanzar ejecutando el comando "**npx supervisor bin/www**". Por razones de comodidad, se puede añadir un script en **package.json**. 
 
-El alumno debe modificar la sección **scripts** de **package.json** para que quede así:
+El alumno debe modificar la sección **scripts** de **package.json** (del directorio `quiz_express`) para que quede así:
 
 ```
   "scripts": {
@@ -177,7 +177,7 @@ El alumno debe crear el fichero **views/layout.ejs** conteniendo el marco de apl
 
 El fichero **views/layout.ejs** debe incluir la sentencia **\<%- body %\>** en el punto donde se va a insertar la vista a mostrar (el método **res.render** asigna el código HTML de la vista a la variable **body**).
 
-Finalmente, el alumno debe retocar la vista **views/index.ejs** que implementa la vista home para que se integre correctamente con el marco **views/layout.ejs**, usando un elemento HTML de tipo **\<section\>**. Elimine de **views/index.ejs** todos los elementos HTML que ya proporciona **views/layout.ejs**, y cree una sección **\<section\>** que contenga solo el contenido específico de esta vista.
+Finalmente, el alumno debe retocar la vista **views/index.ejs** que implementa la vista home para que se integre correctamente con el marco **views/layout.ejs**, usando un elemento HTML de tipo **\<section\>**. Elimine de **views/index.ejs** todos los elementos HTML que ya proporciona **views/layout.ejs**, y cree una sección **\<section\>** que contenga solo el contenido específico de esta vista (el encabezado y el párrafo de bienvenida).
 
 ### Tarea 5 - Crear los elementos MVC de la primitiva GET /credits. 
 
@@ -208,7 +208,11 @@ El alumno debe crear el fichero **models/index.js** para configurar **Sequelize*
 
 El contenido del fichero **models/index.js** es muy parecido al realizado en la entrega 5 de bases de datos. Se requerirá el paquete **sequelize**, se creará una instancia de **Sequelize** que maneje la base de datos **SQLite** alojada en el fichero **quiz.sqlite**, se definirá el modelo **Quiz** con los campos **question** y **answer**, y se exportará la instancia **sequelize** creada.
 
-El alumno también debe crear una migración que cree la tabla **Quizzes** en la base de datos. Esta migración será muy parecida a la desarrollada en la entrega 5 de bases de datos, pero excluyendo el campo **authorId**. El fichero de migración a crear debe llamarse **migrations/YYYYMMDDhhmmss-CreateQuizzesTable.js**, donde YYYYMMDDhhmmss es la fecha en la que se creo el fichero.
+El alumno también debe crear una migración que cree la tabla **Quizzes** en la base de datos. Esta migración será muy parecida a la desarrollada en la entrega 5 de bases de datos, pero excluyendo el campo **authorId**. El fichero de migración a crear debe llamarse **migrations/YYYYMMDDhhmmss-CreateQuizzesTable.js**, donde YYYYMMDDhhmmss es la fecha en la que se creo el fichero. Para crear este fichero puede usar el comando:
+
+```
+npx sequelize migration:create --name  CreateQuizzesTable
+```
 
 El alumno también debe crear un fichero seeder que añada los quizzes iniciales descritos al principio de este documento a la tabla Quizzes. Este fichero seeder es muy parecido al desarrollado en la entrega 5 de bases de datos, pero excluyendo el campo **authorId**. Recuerde que se deben crear los campos **id**, **question**, **answer**, **createdAt** y **updatedAt**.
 
@@ -219,9 +223,13 @@ question: "Capital de España"   - answer: "Madrid"
 question: "Capital de Portugal" - answer: "Lisboa"
 ```
 
-El fichero seeder a crear debe llamarse **seeders/YYYYMMDDhhmmss-FillQuizzesTable.js**, donde YYYYMMDDhhmmss es la fecha en la que se creo el fichero.
+El fichero seeder a crear debe llamarse **seeders/YYYYMMDDhhmmss-FillQuizzesTable.js**, donde YYYYMMDDhhmmss es la fecha en la que se creo el fichero. Para crear este fichero puede usar el comando:
 
-El alumno debe crear en **package.json** los siguientes scripts para aplicar la migración y el seeder (hay versiones para unix y para windows):
+```
+npx sequelize seed:generate --name FillQuizzesTable
+```
+
+El alumno debe crear en **package.json** (dentro del directorio `quiz_express`) los siguientes scripts para aplicar la migración y el seeder (hay versiones para unix y para windows):
 
 ```
   "migrate": "sequelize db:migrate --url sqlite://$(pwd)/quiz.sqlite",  
@@ -248,7 +256,7 @@ Use **routes** y su método **get**. El primer parámetro es el path de la ruta,
 
 El segundo parámetro es la función middleware que debe renderizar el listado de quizzes. 
 
-El método middleware debe desarrollarse en un fichero controlador llamado **controllers/quiz.js**, y debe llamarse **index**.
+El método middleware debe desarrollarse en un fichero controlador llamado **controllers/quiz.js** (debe crear el directorio `controllers`), y debe llamarse **index**.
 
 El fichero **routes/index.js** debe requerir el fichero **controllers/quiz.js** para poder acceder al método **index** que exporta.
 
@@ -261,7 +269,7 @@ El fichero **controllers/quiz.js** debe requerir el módulo **models** (**models
 Se debe definir y exportar el middleware **index** en el controlador **controllers/quiz.js**. Este middleware debe obtener todos los quizzes existentes en la base de datos usando **findAll**, y renderizar la vista **views/quizzes/index.ejs** con los quizzes obtenidos usando el método **res.render**.
 
 ```
-	exports.index = async (req, res, next) => {???};
+  exports.index = async (req, res, next) => {???};
 ```
 
 #### La Vista
