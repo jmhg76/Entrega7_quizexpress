@@ -139,7 +139,7 @@ describe("Pruebas funcionales", function () {
 		await exec(`${sequelize_cmd} db:seed:all --url "sqlite://${db_file}" --seeders-path ${path.join(path_assignment, "seeders")}`)
 
 
-		server = spawn(path.join(path_assignment, "bin", "www"), []);
+		server = spawn("node", [path.join(path_assignment, "bin", "www")]);
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		browser.site = "http://localhost:3000/"
 	});
