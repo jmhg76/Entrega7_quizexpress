@@ -83,7 +83,7 @@ describe("Comprobación de ficheros", function () {
 				true: [/<section>/, /<\/section>/]
 			},
 			[path.join("quizzes", "index.ejs")]: {
-				true: [/<section>/, /<\/section>/, /<h2>[ \n]*Lista de Quizzes[ \n]*<\/h2>/g],
+				true: [/<section>/, /<\/section>/, /<h2>[\t \r\n^M]*Lista de Quizzes[\t \r\n^M]*<\/h2>/g],
 			}
 		}
 
@@ -146,7 +146,7 @@ describe("Pruebas funcionales", function () {
 
 	after(async function() {
 		// Borrar base de datos
-		server.kill();
+		await server.kill();
 		fs.unlinkSync(db_file);
 	})
 	it("7: Comprobar que se puede importar el módulo...", async function () {
