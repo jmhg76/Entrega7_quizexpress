@@ -11,6 +11,7 @@ const fs = require("fs");
 const path_assignment = path.resolve(path.join(__dirname, "../", "quiz_express"));
 
 const WAIT =  typeof process.env.WAIT !== "undefined"?parseInt(process.env.WAIT):50000;
+const TIMEOUT =  typeof process.env.TIMEOUT !== "undefined"?parseInt(process.env.TIMEOUT):2000;
 
 const URL = `file://${path_assignment.replace("%", "%25")}`;
 const browser = new Browser({"waitDuration": WAIT, "silent": true});
@@ -142,7 +143,7 @@ describe("Pruebas funcionales", function () {
 
 
 		server = spawn("node", [path.join(path_assignment, "bin", "www")]);
-		await new Promise(resolve => setTimeout(resolve, 1000));
+		await new Promise(resolve => setTimeout(resolve, TIMEOUT));
 		browser.site = "http://localhost:3000/"
 	});
 
