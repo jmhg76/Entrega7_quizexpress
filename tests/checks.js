@@ -10,8 +10,10 @@ const fs = require("fs");
 
 const path_assignment = path.resolve(path.join(__dirname, "../", "quiz_express"));
 
+const WAIT =  typeof process.env.WAIT !== "undefined"?parseInt(process.env.WAIT):50000;
+
 const URL = `file://${path_assignment.replace("%", "%25")}`;
-const browser = new Browser({"waitDuration": 100, "silent": true});
+const browser = new Browser({"waitDuration": WAIT, "silent": true});
 
 var prueba = 1;
 (prueba).should.not.be.undefined;
