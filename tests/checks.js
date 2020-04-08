@@ -10,6 +10,7 @@ const fs = require("fs");
 
 const path_assignment = path.resolve(path.join(__dirname, "../", "quiz_express"));
 
+const TEST_PORT =  typeof process.env.TEST_PORT !== "undefined"?parseInt(process.env.TEST_PORT):3000;
 const WAIT =  typeof process.env.WAIT !== "undefined"?parseInt(process.env.WAIT):50000;
 const TIMEOUT =  typeof process.env.TIMEOUT !== "undefined"?parseInt(process.env.TIMEOUT):2000;
 
@@ -142,9 +143,10 @@ describe("Pruebas funcionales", function () {
 		await exec(`${sequelize_cmd} db:seed:all --url "sqlite://${db_file}" --seeders-path ${path.join(path_assignment, "seeders")}`)
 
 
-		server = spawn("node", [path.join(path_assignment, "bin", "www")]);
-		await new Promise(resolve => setTimeout(resolve, TIMEOUT));
-		browser.site = "http://localhost:3000/"
+    let bin_path = path.join(path_assignment, "bin", "www");
+    server = spawn('node', [bin_path], {env: {PORT: TEST_PORT}});
+    await new Promise(resolve => setTimeout(resolve, TIMEOUT));
+    browser.site = `http://localhost:${TEST_PORT}/`;
 	});
 
 	after(async function() {
