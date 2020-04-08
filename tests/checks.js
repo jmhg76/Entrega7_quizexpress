@@ -13,6 +13,7 @@ const path_assignment = path.resolve(path.join(__dirname, "../", "quiz_express")
 const TEST_PORT =  typeof process.env.TEST_PORT !== "undefined"?parseInt(process.env.TEST_PORT):3000;
 const WAIT =  typeof process.env.WAIT !== "undefined"?parseInt(process.env.WAIT):50000;
 const TIMEOUT =  typeof process.env.TIMEOUT !== "undefined"?parseInt(process.env.TIMEOUT):2000;
+const DEBUG =  typeof process.env.DEBUG !== "undefined";
 
 const URL = `file://${path_assignment.replace("%", "%25")}`;
 const browser = new Browser({"waitDuration": WAIT, "silent": true});
@@ -23,6 +24,10 @@ var prueba = 1;
 // CRITICAL ERRORS
 let error_critical = null;
 
+// TODO: Integrar bien con un logger
+function log() {
+    if(DEBUG) {console.log.apply(this, arguments );}
+}
 
 // Prechecks, no puntúan
 describe("Prechecks", function () {
@@ -140,11 +145,14 @@ describe("Pruebas funcionales", function () {
 
 		let sequelize_cmd = path.join(path_assignment, "node_modules", ".bin", "sequelize")
 		await exec(`${sequelize_cmd} db:migrate --url "sqlite://${db_file}" --migrations-path ${path.join(path_assignment, "migrations")}`)
-		await exec(`${sequelize_cmd} db:seed:all --url "sqlite://${db_file}" --seeders-path ${path.join(path_assignment, "seeders")}`)
+    log('Lanzada la migración');
+    await exec(`${sequelize_cmd} db:seed:all --url "sqlite://${db_file}" --seeders-path ${path.join(path_assignment, "seeders")}`)
+    log('Lanzado el seeder');
 
 
     let bin_path = path.join(path_assignment, "bin", "www");
     server = spawn('node', [bin_path], {env: {PORT: TEST_PORT}});
+    log(`Lanzado el servidor en el puerto ${TEST_PORT}`);
     await new Promise(resolve => setTimeout(resolve, TIMEOUT));
     browser.site = `http://localhost:${TEST_PORT}/`;
 	});
