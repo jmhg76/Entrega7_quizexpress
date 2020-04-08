@@ -152,9 +152,20 @@ describe("Pruebas funcionales", function () {
 
     let bin_path = path.join(path_assignment, "bin", "www");
     server = spawn('node', [bin_path], {env: {PORT: TEST_PORT}});
+      server.stdout.setEncoding('utf-8');
+      server.stdout.on('data', function(data) {
+          log('Salida del servidor: ', data);
+      })
     log(`Lanzado el servidor en el puerto ${TEST_PORT}`);
     await new Promise(resolve => setTimeout(resolve, TIMEOUT));
     browser.site = `http://localhost:${TEST_PORT}/`;
+      try{
+          await browser.visit("/");
+          browser.assert.status(200);
+      }catch(e){
+          console.log("No se ha podido contactar con el servidor.");
+          throw(e);
+      }
 	});
 
 	after(async function() {
