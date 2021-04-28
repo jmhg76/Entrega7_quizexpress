@@ -97,6 +97,7 @@ describe("Comprobación de ficheros", function () {
 		}
 
 		for (fpath in checks) {
+      this.msg_err = `No se pudo leer el fichero ${fpath}`;
 			let templ = fs.readFileSync(path.join(path_assignment, "views", fpath), "utf8");
 			for(status in checks[fpath]) {
 				elements = checks[fpath][status]
