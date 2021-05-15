@@ -1,0 +1,18 @@
+<!-- Dejamos sólo la parte específica de la vista porque el resto está en layout.ejs -->
+<!-- 
+    Parámetros de entrada de la vista
+
+    - quizzes: Lista con los quizzes ... a tratar con un interador
+-->
+
+<section>
+    <h2> Lista de Quizzes </h2>
+
+    <% for (let quiz of quizzes) { %>
+
+        <p>
+            <%= quiz.question %> :
+                <%= quiz.answer %>
+        </p>
+        <% } %>
+</section>
